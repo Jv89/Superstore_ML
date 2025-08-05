@@ -1,0 +1,65 @@
+import pandas as pd 
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+import numpy as np
+
+#EDA
+
+df = pd.read_csv("Superstore-2.csv", encoding = 'latin1')
+df.head()
+df.shape
+df.info()
+df = df.dropna(subset = ['Sales', 'Quantity','Discount', 'Profit', 'Category'])
+
+#Visualization
+sns.set(style= 'whitegrid')
+plt.figure(figsize=(10,5))
+
+#sales
+plt.subplot(2, 2, 1)
+sns.boxplot(x = 'Category', y = 'Sales', data = df)
+plt.title('Sales per Category')
+
+#Quantity
+plt.subplot(2, 2, 1)
+sns.boxplot(x = 'Category', y = 'Quantity', data = df)
+plt.title('Quantity per Category')
+
+#Discount
+plt.subplot(2, 2, 1)
+sns.boxplot(x = 'Category', y = 'Discount', data = df)
+plt.title('Discount per Category')
+
+#Profit 
+plt.subplot(2, 2, 1)
+sns.boxplot(x = 'Category', y = 'Sales', data = df)
+plt.title('Profit per Category')
+
+plt.tight_layout()
+plt.show()
+
+#Define model 
+for col in ['Sales', 'Quantity','Discount', 'Profit']:
+    df[col] = pd.to_numeric(df[col], errors = 'coerce')
+
+# Define characteristics (X) and target var (y)
+X = df_clean[['Sales', 'Quantity','Discount', 'Profit']]
+y = df_clean['Category']
+
+#training set 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 42)
+
+# KNN training
+knn = KNeighborsClassifier(n_neighbors=3)
+knn.fit(X_train, y_train)
+
+#predictions
+y_pred = knn.predict(X_test)
+
+
+#precision 
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Precision del modelo KNN usuando 'Category' como Variable objetivo : {accuracy * 100 : .2f}%")
